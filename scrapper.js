@@ -8,15 +8,11 @@ let siteName = "";
 
 const getKeywords = async () => {
     try {
-        const browser = await p.launch()
+        const browser = await p.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
 
         const page = await browser.newPage()
 
-        await page.goto("https://www.snopes.com/?s=coronavirus")
-
-        // const grabFromSearchResult = () => {
-
-        // }
+        await page.goto("https://www.snopes.com/?s=coronavirus&hPP=10&idx=wp_live_searchable_posts&page=0&is_v=1")
 
         const extract = (str) => extractor.extract(str, {
             language:"english",
@@ -24,7 +20,6 @@ const getKeywords = async () => {
             return_changed_case:true,
             remove_duplicates: true
        })
-        
 
         const descriptions = await page.evaluate(() => {
 
@@ -50,49 +45,49 @@ const getKeywords = async () => {
     }
 }
 
-const fetchWebsite = async () => {
-    const res = await axios.get(siteUrl)
+// const fetchWebsite = async () => {
+//     const res = await axios.get(siteUrl)
     
-    return cheerio.load(res.data)
-}
+//     return cheerio.load(res.data)
+// }
 
-const getResults = async () => {
-    const $ = await fetchWebsite()
+// const getResults = async () => {
+//     const $ = await fetchWebsite()
 
-    console.log($.html())
+//     console.log($.html())
 
-    const titles = []
-    const descriptions = []
+//     const titles = []
+//     const descriptions = []
 
-    const extract = (str) => extractor.extract(str, {
-        language:"english",
-        remove_digits: true,
-        return_changed_case:true,
-        remove_duplicates: true
-   })
+//     const extract = (str) => extractor.extract(str, {
+//         language:"english",
+//         remove_digits: true,
+//         return_changed_case:true,
+//         remove_duplicates: true
+//    })
 
-    $("h2.heading").each((index, element) => {
-        titles.push($(element).text())
-        console.log(element)
-    })
+//     $("h2.heading").each((index, element) => {
+//         titles.push($(element).text())
+//         console.log(element)
+//     })
 
-    $("p.subheading").each((index, element) => {
-        descriptions.push($(element).text())
-    })
+//     $("p.subheading").each((index, element) => {
+//         descriptions.push($(element).text())
+//     })
 
-    const titleKeywords = titles.map(text => extract(text)).flat()
-    const descriptionKeywords = descriptions.map(text => extract(text)).flat()
+//     const titleKeywords = titles.map(text => extract(text)).flat()
+//     const descriptionKeywords = descriptions.map(text => extract(text)).flat()
     
-    const flatKeywords = Array.from(new Set(_.flatten(_.concat(titleKeywords, ...descriptionKeywords))))
+//     const flatKeywords = Array.from(new Set(_.flatten(_.concat(titleKeywords, ...descriptionKeywords))))
 
-    return {
-        keywords: flatKeywords,
-        descriptions: descriptions,
-        titles: titles
-    }
+//     return {
+//         keywords: flatKeywords,
+//         descriptions: descriptions,
+//         titles: titles
+//     }
     
-}
-void (async () => console.log(await getKeywords()))()
+// }
+// void (async () => console.log(await getKeywords()))()
 
 
 module.exports = getKeywords
