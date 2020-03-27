@@ -1,0 +1,14 @@
+{
+  "name": "web-scraper",
+  "version": "0.0.1",
+  "description": "A web scraper to find keywords on snopes for COVID",
+  "main": "index.js",
+  "repository": "https://github.com/fakovid/WEB.git",
+  "author": "Rishi Kothari <itsrishikothari@gmail.com>",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "@types/puppeteer": "^2.0.1",
+    "keyword-extractor": "0.0.18",
+    "puppeteer": "^2.1.1"
+  }
+}
